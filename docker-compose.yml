@@ -1,0 +1,45 @@
+services:
+  backend:
+    image: php:8.2-cli
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "composer install --no-interaction &&
+             php artisan key:generate --force &&
+             touch database/database.sqlite &&
+             php artisan migrate --force &&
+             php artisan serve --host=0.0.0.0 --port=8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: sqlite
+      DB_DATABASE: /var/www/html/database/database.sqlite
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    depends_on:
+      - backend
+
+  db-admin:
+    image: coleifer/sqlite-web
+    container_name: mini-event-db-admin
+    platform: linux/amd64
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./backend/database:/data
+    command: sqlite_web -H 0.0.0.0 -p 8080 /data/database.sqlite
+    depends_on:
+      - backend
