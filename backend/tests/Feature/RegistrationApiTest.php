@@ -95,3 +95,25 @@ test('authenticated users can search registrations', function () {
         ->assertJsonCount(1, 'data')
         ->assertJsonPath('data.0.name', 'Alice');
 });
+
+test('authenticated users can filter by status', function () {
+    Registration::factory()->create(['status' => RegistrationStatus::Pending]);
+    Registration::factory()->create(['status' => RegistrationStatus::Confirmed]);
+
+    $response = $this->actingAs($this->user)
+        ->getJson('/api/registrations?status=confirmed');
+
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.status', 'confirmed');
+});
+
+test('empty status filter returns all registrations', function () {
+    Registration::factory()->count(5)->create();
+
+    $response = $this->actingAs($this->user)
+        ->getJson('/api/registrations?status=');
+
+    $response->assertStatus(200)
+        ->assertJsonCount(5, 'data');
+});

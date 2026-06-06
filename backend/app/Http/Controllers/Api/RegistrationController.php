@@ -20,7 +20,7 @@ class RegistrationController extends Controller
         $query = Registration::query();
 
         // Search
-        if ($request->has('search')) {
+        if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
@@ -30,7 +30,7 @@ class RegistrationController extends Controller
         }
 
         // Filter by Status
-        if ($request->has('status')) {
+        if ($request->filled('status')) {
             $query->where('status', $request->get('status'));
         }
 

@@ -1,36 +1,37 @@
 # Project Guidelines (Mandatory)
 
-กฎและมาตรฐานการพัฒนาสำหรับโปรเจกต์ Mini Event Registration Dashboard
+กฎและมาตรฐานการพัฒนาสำหรับโปรเจกต์ Mini Event Registration Dashboard เพื่อคุณภาพระดับ Portfolio
+
+## 🏛️ Architecture Consistency (Mandatory)
+- **Unified Layout:** ทุกหน้า Dashboard (Summary, List, Detail, Form) **ต้องใช้ `DashboardLayout`** เพื่อให้มี Sidebar และ Navbar แสดงผลคงที่เสมอ
+- **Stateless Components:** แยก Logic (Data Fetching, Filtering) ออกจาก UI โดยใช้ Custom Hooks เสมอ
+- **Route Protection:** หน้า Dashboard ทั้งหมดต้องอยู่ภายใต้ Middleware `auth:sanctum` และตรวจสอบสถานะ Auth ในฝั่ง Frontend
 
 ## 🎨 Design System & UI
 - **Design Tokens:** ต้องใช้งานผ่าน CSS Variables ที่กำหนดไว้ใน `globals.css` เท่านั้น
-- **Tailwind Classes:** ห้ามใช้ Hardcoded Hex Colors ใน Component ให้ใช้ Class อย่าง `bg-primary`, `text-success`, `border-gray-200` เท่านั้น
-- **Spacing:** ใช้ระบบ Spacing มาตรฐานของ Tailwind (e.g., p-4, m-2) เพื่อความสม่ำเสมอ
-- **Radius:** ใช้ `rounded-lg` (0.75rem) สำหรับ Card และ Modal ตามที่กำหนดไว้ใน Theme
+- **Tailwind Classes:** ห้ามใช้ Hardcoded Hex Colors ให้ใช้ Class มาตรฐาน เช่น `bg-primary`, `text-success`
+- **Spacing & Radius:** ใช้ระบบ Spacing 4 (p-4, gap-4) และ `rounded-xl` (0.75rem) สำหรับ Card/Modal เพื่อความสม่ำเสมอ
+- **UI State Requirements:** ทุกหน้าต้องมี Loading (Skeleton), Error, และ Empty State
 
-## 🚦 UI State Requirements (Mandatory)
-ทุกๆ หน้า (Page) หรือส่วนประกอบหลัก (Component) ต้องมีการจัดการสถานะดังนี้:
-- **Loading State:** ต้องมี Skeleton Loading หรือ Spinner ขณะรอข้อมูล
-- **Error State:** ต้องมีการแสดงข้อความเตือน (Alert) เมื่อเกิดข้อผิดพลาดจาก API หรือการเชื่อมต่อ
-- **User-Friendly Messaging (Mandatory):** ข้อความแจ้งเตือนข้อผิดพลาด (Error Messages) ทั้งฝั่ง Backend และ Frontend ต้องชัดเจน เข้าใจง่าย และไม่ใช้ศัพท์เทคนิคที่ทำให้ผู้ใช้สับสน (เช่น ใช้ "Invalid email or password" แทน "These credentials do not match our records")
-- **Empty State:** ต้องมีการแสดงผลที่ชัดเจน (เช่น Illustration หรือ Text) เมื่อไม่มีข้อมูลในรายการ
+## 💻 Clean Code & Reusability
+- **Atomic Design:** แยก UI ที่ใช้ซ้ำ (Badge, Button, Card, Table) ไว้ใน `src/components/shared` หรือ `ui` ห้ามเขียนโค้ดซ้ำซ้อน
+- **TypeScript:** ใช้ Strict Mode ห้ามใช้ `any` และต้องนิยาม Interface/Type ใน `src/types` เท่านั้น
+- **Form Management:** ใช้ **React Hook Form + Zod** สำหรับ Validation เสมอ โดยเก็บ Schema ไว้ใน `src/schemas`
+- **DRY (Don't Repeat Yourself):** หากพบ Logic หรือ UI ที่ใช้ซ้ำเกิน 2 ครั้ง ต้องสกัดเป็น Reusable Logic/Component ทันที
 
-## 💻 Code Standards
-- **Backend (Laravel):**
-    - ใช้ **API Resources** สำหรับการส่งข้อมูลคืนเสมอ
-    - ต้องเขียน **Automated Test (Pest)** สำหรับทุกลอจิกใหม่ที่เพิ่มเข้ามา
-    - รักษาความสะอาดของ Controller (ใช้ Service หรือ Action หากลอจิกเริ่มซับซ้อน)
-- **Frontend (Next.js):**
-    - ใช้ **TypeScript** แบบ Strict (ห้ามใช้ `any`)
-    - ใช้ **React Hook Form + Zod** สำหรับการจัดการฟอร์ม
-    - จัดเก็บ Component แยกส่วน (Atom/Molecule หรือ Feature-based)
+## 🚦 Error Handling & UX
+- **User-Friendly Messaging:** ข้อความ Error ต้องชัดเจนและสื่อสารกับผู้ใช้ทั่วไป (Human-readable)
+- **Action Feedback:** ทุกการกดปุ่มบันทึกหรือเปลี่ยนสถานะ ต้องมี Loading State และ Toast Notification แจ้งผล
 
-## 🔐 Security & Auth
-- **Route Protection:** หน้า Dashboard ทั้งหมดต้องอยู่ภายใต้ Middleware `auth:sanctum`
-- **Validation:** ต้องทำ Validation ทั้งฝั่ง Backend (Request) และ Frontend (Zod) เสมอ
+## 🧪 Testing & Validation (Mandatory)
+- **Zero-Tolerance for Untested Code:** ทุกครั้งที่เสร็จสิ้นงานในแต่ละ Step หรือ Branch **ต้องมีการเขียน Automated Test ครบถ้วนเสมอ**
+    - **Backend:** ใช้ **Pest Framework** สำหรับ Feature และ Unit Testing
+    - **Frontend:** ใช้ **Vitest + React Testing Library** สำหรับ Component และ Logic Testing
+- **Test Coverage:** ต้องทดสอบทั้ง Happy Path (การทำงานปกติ) และ Edge Cases (กรณีเกิดข้อผิดพลาด)
+- **Continuous Validation:** ก่อนส่งมอบงานหรือสร้าง PR ต้องรัน Test Suite ทั้งหมดเพื่อให้มั่นใจว่าไม่มี Regression
 
 ## 🔄 Development Process
-1. **Research & Strategy:** วิเคราะห์ความต้องการก่อนเริ่มงานทุกครั้ง
-2. **Implementation:** เขียนโค้ดตามมาตรฐานที่กำหนด
-3. **Verification & Testing:** ต้องทำการทดสอบ (Manual หรือ Automated) ทุกครั้งหลังเสร็จสิ้นงาน เพื่อยืนยันว่าสิ่งที่ทำถูกต้องและไม่กระทบส่วนอื่น
-4. **Summary:** สรุปผลการทำงานและผลการทดสอบให้ผู้ใช้ทราบทุกครั้ง
+1. **Research & Strategy:** วิเคราะห์ความต้องการก่อนเริ่มงาน
+2. **Implementation:** เขียนโค้ดตามมาตรฐาน Clean Code
+3. **Verification & Testing:** ต้องทดสอบทุกครั้งหลังเสร็จงาน
+4. **Summary:** สรุปผลการทำงานและผลการทดสอบทุกครั้ง

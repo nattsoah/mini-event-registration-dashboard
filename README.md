@@ -1,27 +1,46 @@
 # Mini Event Registration Dashboard
 
-A robust and modern Event Registration Management System built with **Laravel 11** and **Next.js 14**. This project provides a comprehensive solution for managing event attendees with a focus on performance, security, and exceptional user experience.
+A robust and modern Event Registration Management System built with **Laravel 11** and **Next.js 14**. This project provides a comprehensive solution for managing event attendees with a focus on high-performance data handling, security, and a premium user experience.
+
+## 🌟 Project Overview
+This dashboard allows administrators to efficiently manage event registrations. It features a stateless RESTful API backend and a highly interactive frontend, adhering to modern software engineering standards and clean architecture principles.
 
 ## 🚀 Key Features
-- **Admin Dashboard:** Centralized view for managing all registrations with high-performance search and filtering.
-- **Advanced Data Handling:** Server-side **Pagination**, multi-column **Sorting**, and status-based **Filtering**.
-- **Status Workflow:** Streamlined management of registration states (Pending, Confirmed, Cancelled).
-- **Secure Authentication:** Protected administrative routes using Laravel Sanctum.
-- **Data Portability:** **Export to CSV** functionality for external data analysis.
-- **Modern UI/UX:** Built with a custom **Design System (Tokens)**, featuring a premium Indigo-Slate aesthetic and fully responsive layouts.
-- **Data Integrity:** Dual-layer validation (Frontend with Zod, Backend with Laravel Requests).
 
-## 🛠 Tech Stack
-- **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS, Axios, React Hook Form.
-- **Backend:** Laravel 11 (Stateless API), Laravel Sanctum.
-- **Database:** SQLite (default for simplicity) / MySQL compatible.
-- **Infrastructure:** **Docker & Docker Compose** for seamless environment orchestration.
-- **Testing:** **Pest Framework** for automated feature and unit testing.
+### 1. Registration Management
+- **Intelligent List View:** High-performance table with server-side **Search** (Name, Email, Event), **Status Filtering**, and **Multi-column Sorting**.
+- **Comprehensive Creation Form:** Dynamic form for adding new registrations with real-time validation and user-friendly feedback.
+- **Detailed Registration Insights:** Dedicated detail page showcasing full attendee information and a **Visual Timeline** of registration events.
+- **Dynamic Status Transitions:** Seamlessly transition registration states (Pending, Confirmed, Cancelled) with immediate UI updates.
+
+### 2. Advanced System Capabilities
+- **Data Portability:** Integrated **Export to CSV** functionality for offline analysis and reporting.
+- **Full-scale Pagination:** Optimized server-side pagination for handling large datasets efficiently.
+- **Robust Security:** Administrative route protection using **Laravel Sanctum** (Session-based for web).
+- **Premium UX/UI:**
+  - **Skeleton Loading:** Fluid placeholder states during data fetching.
+  - **Debounced Search:** Minimized API calls with intelligent input delay.
+  - **State-Aware UI:** Purpose-built **Empty States** and **Error States** with retry capabilities.
+  - **Design System:** Consistent aesthetic using a custom **Design Token** system (Tailwind + CSS Variables).
+
+## 🛠 Technical Stack
+
+### Backend (Laravel 11)
+- **API Architecture:** Stateless REST API using **Laravel API Resources** for structured JSON responses.
+- **Validation:** Strict server-side validation using Form Requests.
+- **Database:** SQLite (default) with a clean schema and automated seeders.
+- **Testing:** Comprehensive feature testing powered by **Pest**.
+
+### Frontend (Next.js 14 & React)
+- **Framework:** Next.js 14 (App Router) with **TypeScript** for strict type safety.
+- **Form Management:** **React Hook Form** paired with **Zod** for schema-based validation.
+- **Styling:** Tailwind CSS with a customized color palette and spacing system.
+- **Data Fetching:** Axios with custom hooks for state management and error handling.
 
 ## 📦 Getting Started
 
 ### Option 1: Using Docker (Recommended)
-Launch the entire stack (Backend, Frontend, and Database Admin) with a single command:
+The project is fully containerized for an immediate development experience.
 ```bash
 docker-compose up -d
 ```
@@ -31,7 +50,7 @@ docker-compose up -d
 
 ### Option 2: Manual Installation
 
-#### Backend
+#### Backend Setup
 ```bash
 cd backend
 composer install
@@ -42,7 +61,7 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-#### Frontend
+#### Frontend Setup
 ```bash
 cd frontend
 npm install
@@ -53,18 +72,26 @@ npm run dev
 - **Email:** `admin@example.com`
 - **Password:** `admin`
 
-## 🧠 Design Concepts
-- **Clean Architecture:** Strict separation between the stateless API and the interactive frontend.
-- **Atomic Design Principles:** UI components are built using consistent Design Tokens defined in CSS variables.
-- **Test-Driven Mindset:** Core API functionalities are guarded by automated tests to ensure reliability.
-- **Scalability:** Built using industry-standard patterns (API Resources, DTOs, and Service-oriented logic) making it easy to extend.
+## 📡 API Endpoints (Brief)
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/registrations` | List with Search/Filter/Sort |
+| `POST` | `/api/registrations` | Create new registration |
+| `GET` | `/api/registrations/{id}` | Get detailed info |
+| `PATCH` | `/api/registrations/{id}/status` | Update status |
+| `GET` | `/api/registrations/export` | Download CSV |
+| `GET` | `/api/summary` | Dashboard statistics |
 
-## 🧪 Testing
-Run the automated test suite to verify system integrity:
+## 🧪 Quality Assurance
+Core functionalities are protected by automated tests to ensure regressions are caught early.
 ```bash
+# Run Backend Tests
 cd backend
 php artisan test
 ```
 
-## 📊 Database Administration
-The project includes a web-based interface for managing the SQLite database. If running via Docker, visit [http://localhost:8081](http://localhost:8081) to view and manage tables directly.
+## 🧠 Architectural Highlights
+- **Service-Oriented Thinking:** Logic is kept out of controllers, prioritizing clean, reusable abstractions.
+- **Single Source of Truth:** Centralized types and schemas shared across the frontend components.
+- **User-Centric Messaging:** Custom error handling that translates technical failures into helpful, human-readable instructions.
+- **Atomic Components:** Highly reusable UI components following a modular structure.
