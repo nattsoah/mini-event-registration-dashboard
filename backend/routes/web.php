@@ -10,6 +10,6 @@ Route::get('/', function () {
 // Redirect them back to the frontend
 Route::get('/login', function () {
     return redirect(config('app.frontend_url'));
-})->name('login');
+})->name('login.redirect');
 
 require __DIR__.'/auth.php';
