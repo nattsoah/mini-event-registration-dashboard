@@ -50,11 +50,16 @@ export function useUpdateStatus() {
           customClass: { popup: 'rounded-2xl' }
         })
         if (onSuccess) onSuccess()
-      } catch (err: any) {
+      } catch (err: unknown) {
+        let message = 'Failed to update status'
+        if (err && typeof err === 'object' && 'response' in err) {
+            const axiosError = err as { response: { data?: { message?: string } } }
+            message = axiosError.response.data?.message || message
+        }
         MySwal.fire({
           icon: 'error',
           title: 'Update Failed',
-          text: err.response?.data?.message || 'Failed to update status',
+          text: message,
           customClass: { popup: 'rounded-2xl' }
         })
       } finally {
@@ -69,7 +74,7 @@ export function useUpdateStatus() {
     try {
       await api.patch(`/api/registrations/${id}/status`, { status })
       if (onSuccess) onSuccess()
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to update status', err)
     } finally {
       setIsUpdating(false)
