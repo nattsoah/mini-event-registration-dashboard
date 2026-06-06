@@ -41,10 +41,11 @@ export default function RootLoginPage() {
     try {
       await login(data);
       // Redirect happens in AuthContext login function
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorData = err as { response?: { data?: { message?: string; errors?: { email?: string[] } } } };
       const message =
-        err.response?.data?.errors?.email?.[0] ||
-        err.response?.data?.message ||
+        errorData.response?.data?.errors?.email?.[0] ||
+        errorData.response?.data?.message ||
         'Login failed. Please check your credentials.';
       setError(message);
     } finally {

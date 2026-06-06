@@ -12,7 +12,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
-    login: (credentials: any) => Promise<void>;
+    login: (credentials: Record<string, string>) => Promise<void>;
     logout: () => Promise<void>;
     isLoading: boolean;
 }
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             } else {
                 setUser(null);
             }
-        } catch (error) {
+        } catch {
             setUser(null);
         } finally {
             setIsLoading(false);
