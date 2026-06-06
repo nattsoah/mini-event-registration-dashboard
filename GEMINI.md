@@ -23,6 +23,13 @@
 - **User-Friendly Messaging:** ข้อความ Error ต้องชัดเจนและสื่อสารกับผู้ใช้ทั่วไป (Human-readable)
 - **Action Feedback:** ทุกการกดปุ่มบันทึกหรือเปลี่ยนสถานะ ต้องมี Loading State และ Toast Notification แจ้งผล
 
+## 🧪 Testing & Validation (Mandatory)
+- **Zero-Tolerance for Untested Code:** ทุกครั้งที่เสร็จสิ้นงานในแต่ละ Step หรือ Branch **ต้องมีการเขียน Automated Test ครบถ้วนเสมอ**
+    - **Backend:** ใช้ **Pest Framework** สำหรับ Feature และ Unit Testing
+    - **Frontend:** ใช้ **Vitest + React Testing Library** สำหรับ Component และ Logic Testing
+- **Test Coverage:** ต้องทดสอบทั้ง Happy Path (การทำงานปกติ) และ Edge Cases (กรณีเกิดข้อผิดพลาด)
+- **Continuous Validation:** ก่อนส่งมอบงานหรือสร้าง PR ต้องรัน Test Suite ทั้งหมดเพื่อให้มั่นใจว่าไม่มี Regression
+
 ## 🔄 Development Process
 1. **Research & Strategy:** วิเคราะห์ความต้องการก่อนเริ่มงาน
 2. **Implementation:** เขียนโค้ดตามมาตรฐาน Clean Code
