@@ -1,6 +1,6 @@
 'use client'
 
-export function useRegistration(_id: string | number) {
+export function useRegistration() {
   return {
     data: null,
     loading: false,
