@@ -12,7 +12,7 @@ interface User {
 
 interface AuthContextType {
     user: User | null;
-    login: (credentials: Record<string, string>) => Promise<void>;
+    login: (credentials: { email: string; password: string }) => Promise<void>;
     logout: () => Promise<void>;
     isLoading: boolean;
 }
