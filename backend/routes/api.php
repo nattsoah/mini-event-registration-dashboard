@@ -10,10 +10,21 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Public routes (if any)
-Route::post('/registrations', [RegistrationController::class, 'store']); // Anyone can register
+// Auth Check (Silent - No 401 in console)
+Route::get('/auth-check', function (Request $request) {
+    if (auth('sanctum')->check()) {
+        return response()->json([
+            'authenticated' => true,
+            'user' => auth('sanctum')->user()
+        ]);
+    }
+    return response()->json(['authenticated' => false]);
+});
 
-// Protected routes (Bonus: Route Protection)
+// Public routes
+Route::post('/registrations', [RegistrationController::class, 'store']);
+
+// Protected routes
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -24,5 +35,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/registrations/{registration}', [RegistrationController::class, 'show']);
     Route::patch('/registrations/{registration}/status', [RegistrationController::class, 'updateStatus']);
 });
-
-require __DIR__.'/auth.php';

@@ -25,6 +25,21 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
+test('users see friendly error message on failed login', function () {
+    $user = User::factory()->create();
+
+    $response = $this->postJson('/login', [
+        'email' => $user->email,
+        'password' => 'wrong-password',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['email'])
+        ->assertJsonFragment([
+            'email' => ['Invalid email or password. Please check your credentials and try again.']
+        ]);
+});
+
 test('users can logout', function () {
     $user = User::factory()->create();
 

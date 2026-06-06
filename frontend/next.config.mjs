@@ -1,4 +1,30 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const backendUrl =
+  process.env.BACKEND_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  'http://localhost:8000';
+
+const nextConfig = {
+  async rewrites() {
+    return [
+      {
+        source: '/sanctum/:path*',
+        destination: `${backendUrl}/sanctum/:path*`,
+      },
+      {
+        source: '/login',
+        destination: `${backendUrl}/login`,
+      },
+      {
+        source: '/logout',
+        destination: `${backendUrl}/logout`,
+      },
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
+      },
+    ];
+  },
+};
 
 export default nextConfig;

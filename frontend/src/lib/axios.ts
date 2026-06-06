@@ -1,18 +1,15 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+    // Browser requests go through the Next.js proxy (same origin) so CSRF cookies work.
+    baseURL: typeof window !== 'undefined' ? '' : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'),
+    withCredentials: true,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+    },
+});
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // TODO: global error handling
-    return Promise.reject(error)
-  }
-)
-
-export default api
+export default api;

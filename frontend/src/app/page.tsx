@@ -1,103 +1,148 @@
-import React from 'react';
+'use client';
 
-export default function ThemeShowcasePage() {
-  const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useAuth } from '@/app/providers';
+import { useRouter } from 'next/navigation';
+
+const loginSchema = z.object({
+  email: z.string().email('Email is required'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+export default function RootLoginPage() {
+  const { login, user, isLoading } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  // If already logged in, redirect to dashboard
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push('/dashboard');
+    }
+  }, [user, isLoading, router]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
+    setIsSubmitting(true);
+    setError(null);
+    try {
+      await login(data);
+      // Redirect happens in AuthContext login function
+    } catch (err: any) {
+      const message =
+        err.response?.data?.errors?.email?.[0] ||
+        err.response?.data?.message ||
+        'Login failed. Please check your credentials.';
+      setError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-background p-8 md:p-24 space-y-16">
-      {/* Header */}
-      <section className="space-y-4">
-        <h1 className="text-5xl font-extrabold tracking-tight text-foreground">
-          Full Color <span className="text-primary">Palettes</span>
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl">
-          Complete design tokens with full scale palettes (50-950). 
-          <br /><span className="text-sm font-normal text-destructive italic">*Fixed: Colors now use direct CSS variable mapping for reliable preview.*</span>
-        </p>
-      </section>
-
-      {/* Primary Palette */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold border-b pb-2">Primary Palette (Indigo)</h2>
-        <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-11 gap-2">
-          {shades.map((shade) => (
-            <PaletteBox key={shade} shade={shade} colorVar={`--primary-${shade}`} />
-          ))}
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-card p-8 rounded-xl shadow-premium border border-gray-200">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">
+            Mini Event <span className="text-primary">Dashboard</span>
+          </h1>
         </div>
-      </section>
 
-      {/* Gray Palette */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold border-b pb-2">Neutral Palette (Slate Gray)</h2>
-        <div className="grid grid-cols-2 md:grid-cols-6 lg:grid-cols-11 gap-2">
-          {shades.map((shade) => (
-            <PaletteBox key={shade} shade={shade} colorVar={`--gray-${shade}`} />
-          ))}
-        </div>
-      </section>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          {error && (
+            <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm p-3 rounded-md text-center animate-in fade-in slide-in-from-top-1">
+              {error}
+            </div>
+          )}
 
-      {/* Semantic Palettes */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold border-b pb-2">Semantic Palettes</h2>
-        <div className="space-y-8">
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Success</h3>
-            <div className="flex gap-2 h-16">
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold" style={{ backgroundColor: 'hsl(var(--success-50))' }}>50</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--success-500))' }}>500</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--success-900))' }}>900</div>
+          <div className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                {...register('email')}
+                type="email"
+                autoComplete="email"
+                className={`appearance-none block w-full px-4 py-3 border ${errors.email ? 'border-destructive' : 'border-gray-300'
+                  } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all`}
+                placeholder="admin@example.com"
+              />
+              {errors.email && (
+                <p className="mt-1 text-xs text-destructive">{errors.email.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
+              <input
+                {...register('password')}
+                type="password"
+                autoComplete="current-password"
+                className={`appearance-none block w-full px-4 py-3 border ${errors.password ? 'border-destructive' : 'border-gray-300'
+                  } rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all`}
+                placeholder="••••••••"
+              />
+              {errors.password && (
+                <p className="mt-1 text-xs text-destructive">{errors.password.message}</p>
+              )}
             </div>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Warning</h3>
-            <div className="flex gap-2 h-16">
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold" style={{ backgroundColor: 'hsl(var(--warning-50))' }}>50</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--warning-500))' }}>500</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--warning-900))' }}>900</div>
-            </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-primary hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-premium hover:scale-[1.02] active:scale-[0.98]"
+            >
+              {isSubmitting ? (
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                'Sign in to Dashboard'
+              )}
+            </button>
           </div>
-          <div className="space-y-2">
-            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider">Destructive</h3>
-            <div className="flex gap-2 h-16">
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold" style={{ backgroundColor: 'hsl(var(--destructive-50))' }}>50</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--destructive-500))' }}>500</div>
-               <div className="w-24 rounded border flex items-center justify-center text-[10px] font-bold text-white" style={{ backgroundColor: 'hsl(var(--destructive-900))' }}>900</div>
-            </div>
+        </form>
+
+        <div className="mt-8 pt-6 border-t border-gray-100">
+          <div className="bg-gray-50 rounded-lg p-4 flex flex-col">
+            <span className="text-xs font-semibold text-center text-gray-500 uppercase mb-2">Demo Credentials</span>
+              <div className="flex w-full text-sm gap-2">
+                <span className="text-gray-600">Email:</span>
+                <span className="font-mono text-primary font-medium">admin@example.com</span>
+              </div>
+              <div className="flex w-full text-sm mt-1 gap-2">
+                <span className="text-gray-600">Password:</span>
+                <span className="font-mono text-primary font-medium">admin</span>
+              </div>
           </div>
         </div>
-      </section>
-
-      {/* Usage Examples */}
-      <section className="space-y-6">
-        <h2 className="text-2xl font-bold border-b pb-2">Shade Usage Examples</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-xl shadow-soft border" style={{ backgroundColor: 'hsl(var(--primary-50))', borderColor: 'hsl(var(--primary-100))' }}>
-            <h3 className="font-bold" style={{ color: 'hsl(var(--primary-900))' }}>Information Card</h3>
-            <p className="text-sm mt-2" style={{ color: 'hsl(var(--primary-700))' }}>Using primary-50 for background and primary-900 for text creates a high-quality branded feel.</p>
-          </div>
-          <div className="p-6 rounded-xl bg-white border border-gray-200 shadow-soft">
-            <h3 className="font-bold text-gray-900">Standard Card</h3>
-            <p className="text-sm text-gray-500 mt-2">Using gray-200 for borders and gray-500 for muted text is the standard for clean dashboards.</p>
-          </div>
-          <div className="p-6 rounded-xl shadow-soft border" style={{ backgroundColor: 'hsl(var(--success-50))', borderColor: 'hsl(var(--success-500) / 0.2)' }}>
-            <h3 className="font-bold" style={{ color: 'hsl(var(--success-500))' }}>Success Alert</h3>
-            <p className="text-sm mt-2" style={{ color: 'hsl(var(--success-900))' }}>Soft backgrounds with strong primary accents are great for feedback.</p>
-          </div>
-        </div>
-      </section>
-    </main>
-  );
-}
-
-function PaletteBox({ shade, colorVar }: { shade: number; colorVar: string }) {
-  const isDark = shade >= 500;
-  return (
-    <div className="space-y-1">
-      <div 
-        className="h-16 w-full rounded-md border border-black/5 flex items-center justify-center transition-transform hover:scale-105"
-        style={{ backgroundColor: `hsl(var(${colorVar}))` }}
-      >
-        <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-black/60'}`}>{shade}</span>
       </div>
     </div>
   );
