@@ -20,7 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
         ]);
 
-        //
+        $middleware->redirectTo(
+            guests: '/login',
+            users: env('FRONTEND_URL', 'http://localhost:3000') . '/dashboard'
+        );
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
