@@ -11,6 +11,12 @@ export interface Registration {
   registered_at: string
   created_at: string
   updated_at: string
+  logs?: Array<{
+    id: number
+    status: RegistrationStatus
+    message: string
+    created_at: string
+  }>
 }
 
 export interface PaginatedResponse<T> {

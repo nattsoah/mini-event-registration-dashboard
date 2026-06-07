@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { Eye, ArrowUpDown, ArrowUp, ArrowDown, MoreHorizontal, RefreshCw } from 'lucide-react'
 import { Registration } from '@/types/registration'
 import { StatusBadge } from './StatusBadge'
-import { useUpdateStatus } from '@/hooks/useUpdateStatus'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -13,11 +12,9 @@ interface RegistrationTableProps {
   sortBy: string
   sortOrder: 'asc' | 'desc'
   onSort: (field: string) => void
-  onRefresh: () => void
 }
 
-export function RegistrationTable({ registrations, sortBy, sortOrder, onSort, onRefresh }: RegistrationTableProps) {
-  const { changeStatus } = useUpdateStatus()
+export function RegistrationTable({ registrations, sortBy, sortOrder, onSort }: RegistrationTableProps) {
   const [activeMenu, setActiveMenu] = useState<number | null>(null)
 
   const SortIcon = ({ field }: { field: string }) => {
@@ -99,27 +96,24 @@ export function RegistrationTable({ registrations, sortBy, sortOrder, onSort, on
                       {activeMenu === reg.id && (
                         <>
                           <div className="fixed inset-0 z-10" onClick={() => setActiveMenu(null)} />
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20 animate-in fade-in zoom-in duration-100 origin-top-right">
-                            <p className="px-4 py-1 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Management</p>
+                          <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20 animate-in fade-in zoom-in duration-100 origin-top-right">
                             <Link
                               href={`/registrations/${reg.id}`}
-                              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                               onClick={() => setActiveMenu(null)}
                             >
                               <Eye className="w-4 h-4 text-gray-400" />
                               View Details
                             </Link>
 
-                            <button
-                              onClick={() => {
-                                setActiveMenu(null)
-                                changeStatus(reg.id, reg.status, onRefresh)
-                              }}
-                              className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            <Link
+                              href={`/registrations/${reg.id}?edit=true`}
+                              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                              onClick={() => setActiveMenu(null)}
                             >
                               <RefreshCw className="w-4 h-4 text-gray-400" />
                               Update Status
-                            </button>
+                            </Link>
                           </div>
                         </>
                       )}

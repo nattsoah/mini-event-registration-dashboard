@@ -1,33 +1,56 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { ChevronLeft, Edit3, Save, X, Mail, Phone, Calendar, Info, Clock } from 'lucide-react'
 import { useRegistration } from '@/hooks/useRegistration'
 import { useUpdateStatus } from '@/hooks/useUpdateStatus'
+import { confirmDialog } from '@/lib/swal'
 import { StatusBadge } from '@/components/registrations/StatusBadge'
 import { StatusSelect } from '@/components/registrations/StatusSelect'
 import { RegistrationTimeline } from '@/components/registrations/RegistrationTimeline'
 import LoadingState from '@/components/shared/LoadingState'
 import ErrorState from '@/components/shared/ErrorState'
 import { RegistrationStatus } from '@/types/registration'
+import { useEffect } from 'react'
 
 export default function RegistrationDetailPage() {
   const { id } = useParams()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { data: registration, loading, error, refresh } = useRegistration(id as string)
   const { updateStatus, isUpdating } = useUpdateStatus()
   
   const [isEditMode, setIsEditMode] = useState(false)
   const [pendingStatus, setPendingStatus] = useState<RegistrationStatus | null>(null)
 
+  // Handle auto-edit from URL parameter
+  useEffect(() => {
+    if (registration && searchParams.get('edit') === 'true') {
+      setPendingStatus(registration.status)
+      setIsEditMode(true)
+      // Clear the parameter from the URL to prevent it from reopening edit mode after save/refresh
+      const newUrl = window.location.pathname
+      window.history.replaceState({}, '', newUrl)
+    }
+  }, [registration, searchParams])
+
   const handleSaveStatus = async () => {
     if (!pendingStatus || !registration) return
-    
-    await updateStatus(registration.id, pendingStatus, () => {
-      setIsEditMode(false)
-      refresh()
+
+    const result = await confirmDialog({
+      title: 'Confirm Status Update',
+      text: `Are you sure you want to change the status to ${pendingStatus}?`,
+      confirmButtonText: 'Yes, Save Changes',
+      confirmButtonColor: '#4f46e5',
     })
+
+    if (result.isConfirmed) {
+      await updateStatus(registration.id, pendingStatus, () => {
+        setIsEditMode(false)
+        refresh()
+      })
+    }
   }
 
   const handleCancelEdit = () => {
@@ -47,7 +70,7 @@ export default function RegistrationDetailPage() {
   if (!registration) return <ErrorState message="Registration not found" />
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="w-full space-y-6 pb-20">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -119,54 +142,57 @@ export default function RegistrationDetailPage() {
             <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
               <h3 className="font-bold text-gray-900">Attendee Information</h3>
             </div>
-            <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                  <Mail className="w-5 h-5" />
+            <div className="divide-y divide-gray-100">
+              <div className="p-6 flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 transition-colors group-hover:bg-indigo-100">
+                  <Mail className="w-6 h-6" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Email Address</p>
-                  <p className="text-gray-900 font-medium">{registration.email}</p>
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Email Address</p>
+                  <p className="text-gray-900 font-semibold">{registration.email}</p>
                 </div>
               </div>
               
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 flex-shrink-0">
-                  <Phone className="w-5 h-5" />
+              <div className="p-6 flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 transition-colors group-hover:bg-emerald-100">
+                  <Phone className="w-6 h-6" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Phone Number</p>
-                  <p className="text-gray-900 font-medium">{registration.phone || 'Not provided'}</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 flex-shrink-0">
-                  <Calendar className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Event Name</p>
-                  <p className="text-gray-900 font-medium">{registration.event_name}</p>
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Phone Number</p>
+                  <p className="text-gray-900 font-semibold">{registration.phone || 'Not provided'}</p>
                 </div>
               </div>
 
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center text-purple-600 flex-shrink-0">
-                  <Clock className="w-5 h-5" />
+              <div className="p-6 flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 transition-colors group-hover:bg-amber-100">
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">Registered On</p>
-                  <p className="text-gray-900 font-medium">
-                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(registration.registered_at))}
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Event Name</p>
+                  <p className="text-gray-900 font-semibold">{registration.event_name}</p>
+                </div>
+              </div>
+
+              <div className="p-6 flex items-center gap-4 group">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 transition-colors group-hover:bg-purple-100">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Registered On</p>
+                  <p className="text-gray-900 font-semibold">
+                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'short' }).format(new Date(registration.registered_at))}
                   </p>
                 </div>
               </div>
             </div>
 
             {registration.notes && (
-              <div className="px-6 py-6 border-t border-gray-100 bg-gray-50/30">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Internal Notes</p>
-                <div className="bg-white p-4 rounded-xl border border-gray-100 text-gray-600 text-sm italic leading-relaxed">
+              <div className="px-6 py-8 border-t border-gray-100 bg-gray-50/30">
+                <div className="flex items-center gap-2 mb-3">
+                    <Info className="w-4 h-4 text-gray-400" />
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Internal Notes</p>
+                </div>
+                <div className="bg-white p-5 rounded-2xl border border-gray-100 text-gray-600 text-sm italic leading-relaxed shadow-inner">
                   &quot;{registration.notes}&quot;
                 </div>
               </div>

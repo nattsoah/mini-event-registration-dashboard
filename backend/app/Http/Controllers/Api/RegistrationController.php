@@ -63,6 +63,12 @@ class RegistrationController extends Controller
 
         $registration = Registration::create($validated);
 
+        // Record initial log
+        $registration->logs()->create([
+            'status' => 'pending',
+            'message' => 'Initial status automatically set to Pending.',
+        ]);
+
         return new RegistrationResource($registration);
     }
 
@@ -71,7 +77,7 @@ class RegistrationController extends Controller
      */
     public function show(Registration $registration): RegistrationResource
     {
-        return new RegistrationResource($registration);
+        return new RegistrationResource($registration->load('logs'));
     }
 
     /**
@@ -83,9 +89,24 @@ class RegistrationController extends Controller
             'status' => 'required|in:pending,confirmed,cancelled',
         ]);
 
-        $registration->update($validated);
+        $oldStatus = $registration->status->value;
+        $newStatus = $validated['status'];
 
-        return new RegistrationResource($registration);
+        if ($oldStatus !== $newStatus) {
+            $registration->update($validated);
+
+            // Record status change log
+            $message = $newStatus === 'pending' 
+                ? "Status reset to Pending by administrator (previously " . ucfirst($oldStatus) . ")."
+                : "Status changed from " . ucfirst($oldStatus) . " to " . ucfirst($newStatus) . " by administrator.";
+
+            $registration->logs()->create([
+                'status' => $newStatus,
+                'message' => $message,
+            ]);
+        }
+
+        return new RegistrationResource($registration->load('logs'));
     }
 
     /**

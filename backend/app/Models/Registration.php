@@ -30,6 +30,11 @@ class Registration extends Model
         ];
     }
 
+    public function logs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(RegistrationLog::class)->orderBy('created_at', 'desc');
+    }
+
     public function scopePending(Builder $query): Builder
     {
         // TODO: filter pending registrations
