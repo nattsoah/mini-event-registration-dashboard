@@ -1,5 +1,5 @@
 import { Registration, RegistrationStatus } from '@/types/registration'
-import { Calendar, CheckCircle2, XCircle, Clock, RefreshCw } from 'lucide-react'
+import { Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface RegistrationTimelineProps {
