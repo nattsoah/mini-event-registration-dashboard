@@ -84,6 +84,17 @@ test('authenticated users can update registration status', function () {
     ]);
 });
 
+test('authenticated users can fetch a single registration', function () {
+    $registration = Registration::factory()->create();
+
+    $response = $this->actingAs($this->user)
+        ->getJson("/api/registrations/{$registration->id}");
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.id', $registration->id)
+        ->assertJsonPath('data.name', $registration->name);
+});
+
 test('authenticated users can search registrations', function () {
     Registration::factory()->create(['name' => 'Alice']);
     Registration::factory()->create(['name' => 'Bob']);

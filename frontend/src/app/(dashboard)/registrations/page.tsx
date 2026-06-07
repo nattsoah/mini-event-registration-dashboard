@@ -124,7 +124,6 @@ export default function RegistrationsPage() {
             sortBy={params.sort_by}
             sortOrder={params.sort_order}
             onSort={handleSort}
-            onRefresh={refresh}
           />
 
           {data && data.meta.last_page > 1 && (
