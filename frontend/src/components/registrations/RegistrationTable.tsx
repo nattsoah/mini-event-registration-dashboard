@@ -96,7 +96,13 @@ export function RegistrationTable({ registrations, sortBy, sortOrder, onSort }: 
                       {activeMenu === reg.id && (
                         <>
                           <div className="fixed inset-0 z-10" onClick={() => setActiveMenu(null)} />
-                          <div className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20 animate-in fade-in zoom-in duration-100 origin-top-right">
+                          <div className={cn(
+                            "absolute right-0 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20 animate-in fade-in zoom-in duration-100",
+                            // If it's one of the last two rows, open the menu upwards
+                            registrations.indexOf(reg) >= registrations.length - 2 
+                              ? "bottom-full mb-2 origin-bottom-right" 
+                              : "mt-2 origin-top-right"
+                          )}>
                             <Link
                               href={`/registrations/${reg.id}`}
                               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
