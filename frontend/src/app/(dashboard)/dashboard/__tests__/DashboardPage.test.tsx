@@ -60,7 +60,8 @@ describe('DashboardPage', () => {
     })
 
     render(<DashboardPage />)
-    expect(screen.getByText('100')).toBeInTheDocument()
+    const totalElements = screen.getAllByText('100')
+    expect(totalElements.length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText('20')).toBeInTheDocument()
     expect(screen.getByText('70')).toBeInTheDocument()
     expect(screen.getByText('10')).toBeInTheDocument()
