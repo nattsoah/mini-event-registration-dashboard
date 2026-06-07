@@ -6,6 +6,7 @@ import { LayoutDashboard, Users, LogOut, Ticket, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/app/providers'
 import { confirmDialog } from '@/lib/swal'
+import { Button } from '@/components/shared/Button'
 
 interface SidebarProps {
   isOpen: boolean
@@ -38,7 +39,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     <div className="flex flex-col h-full">
       <div className="p-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-sm">
             <Ticket className="w-6 h-6" />
           </div>
           <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600">
@@ -61,7 +62,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               className={cn(
                 'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all group',
                 isActive
-                  ? 'bg-primary text-white shadow-md shadow-primary/10'
+                  ? 'bg-primary text-white shadow-sm shadow-primary/10'
                   : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
               )}
             >
@@ -73,13 +74,14 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
       </nav>
 
       <div className="p-4 border-t border-gray-100">
-        <button
+        <Button
+          variant="ghost"
           onClick={handleSignOut}
-          className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50 transition-all group"
+          className="w-full justify-start text-rose-600 hover:bg-rose-50 hover:text-rose-700 group"
         >
-          <LogOut className="w-5 h-5 text-rose-400 group-hover:text-rose-600" />
+          <LogOut className="w-5 h-5 mr-3 text-rose-400 group-hover:text-rose-600" />
           Sign Out
-        </button>
+        </Button>
       </div>
     </div>
   )
