@@ -1,10 +1,10 @@
-# 🎟️ EventHub - Full-Stack Event Registration Management System
+# 🎟️ EventHub - Event Registration Management System
 
 EventHub is a professional-grade registration management solution featuring a powerful Laravel backend and a modern Next.js dashboard. It is designed to streamline the attendee registration process with real-time analytics and an intuitive management interface.
 
 ---
 
-## 🚀 Key Features & Implementation (Requirements Met)
+## 🚀 Key Features & Implementation
 
 ### 📋 Core Registration Features
 
