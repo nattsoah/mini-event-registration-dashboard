@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRegistrations } from '@/hooks/useRegistrations'
 import { RegistrationTable } from '@/components/registrations/RegistrationTable'
 import { SkeletonTable } from '@/components/shared/SkeletonTable'
+import { Button } from '@/components/shared/Button'
 import EmptyState from '@/components/shared/EmptyState'
 import ErrorState from '@/components/shared/ErrorState'
 import api from '@/lib/axios'
@@ -63,20 +64,19 @@ export default function RegistrationsPage() {
           <p className="text-gray-500">Manage and monitor all event registrations.</p>
         </div>
         <div className="flex items-center gap-3">
-          <button
+          <Button
+            variant="outline"
             onClick={handleExport}
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all shadow-sm"
           >
             <Download className="w-4 h-4 mr-2" />
             Export CSV
-          </button>
-          <Link
-            href="/registrations/create"
-            className="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-all shadow-sm"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Registration
-          </Link>
+          </Button>
+          <Button asChild className="group">
+            <Link href="/registrations/create">
+              <Plus className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+              Add Registration
+            </Link>
+          </Button>
         </div>
       </div>
 

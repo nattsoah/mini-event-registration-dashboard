@@ -2,7 +2,8 @@ import React from 'react';
 
 export default function LoadingState() {
   return (
-    <div className="flex flex-col items-center justify-center p-12 space-y-4">
+    <div data-testid="loading-state" className="flex flex-col items-center justify-center p-20 min-h-[400px]">
+
       <div className="relative w-12 h-12">
         <div className="absolute top-0 left-0 w-full h-full border-4 border-primary/20 rounded-full"></div>
         <div className="absolute top-0 left-0 w-full h-full border-4 border-primary border-t-transparent rounded-full animate-spin"></div>

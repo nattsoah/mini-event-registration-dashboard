@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 EventHub - Modern Registration Dashboard (Next.js)
 
-## Getting Started
+A high-performance, visually stunning dashboard built with Next.js 14, focusing on seamless UX and robust data management.
 
-First, run the development server:
+## 🏛️ Frontend Architecture
 
+- **App Router:** Utilizing Next.js 14 App Router for optimized routing and layouts.
+- **Atomic Design:** UI components are organized into `shared`, `ui`, and feature-specific directories for maximum reusability.
+- **Custom Hooks:** Business logic (Data fetching, Filtering) is abstracted away from UI components into reusable hooks (`src/hooks`).
+- **Route Protection:** Higher-Order Components (HOC) and Context API manage authentication state and protect private dashboard routes.
+
+## 🛠️ Technical Stack
+
+- **Framework:** Next.js 14 (TypeScript)
+- **Styling:** Tailwind CSS + Class Variance Authority (CVA)
+- **Form Management:** React Hook Form + Zod (Schema-based validation)
+- **Data Fetching:** Axios + Custom Hooks
+- **Charts:** Recharts for data visualization
+- **Icons:** Lucide React
+- **Testing:** Vitest + React Testing Library
+
+## ✨ Key Features & UX
+
+- **Fully Responsive Design:** Mobile-first approach using Tailwind CSS, ensuring a seamless experience across all screen sizes.
+- **Dashboard Summary:** Real-time statistics with interactive Pie Charts.
+- **Advanced Data Table:** Server-side pagination, debounced searching, filtering by status, and multi-column sorting.
+- **Dynamic Registration Form:** Real-time client-side validation with user-friendly error messaging.
+- **Registration Timeline:** Visual audit trail for status updates and historical data.
+- **UI States:** Exhaustive implementation of Skeleton Loaders, Error Boundaries, and Empty States for a "polished" feel.
+
+## 🧪 Testing
+
+The frontend is verified using component and logic tests:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm test
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Installation & Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1.  Navigate to the frontend directory:
+    ```bash
+    cd frontend
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Configure environment:
+    ```bash
+    cp .env.local.example .env.local
+    # Ensure NEXT_PUBLIC_API_URL points to your backend (e.g., http://localhost:8000)
+    ```
+4.  Start development server:
+    ```bash
+    npm run dev
+    ```

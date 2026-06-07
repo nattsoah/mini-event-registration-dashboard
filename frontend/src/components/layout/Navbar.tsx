@@ -44,7 +44,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
             <p className="text-sm font-bold text-gray-900">{user?.name || 'Admin User'}</p>
             <p className="text-xs text-gray-500 font-medium">{user?.email || 'admin@example.com'}</p>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-primary/20">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center text-white font-bold shadow-sm">
             {user?.name?.[0] || 'A'}
           </div>
         </div>

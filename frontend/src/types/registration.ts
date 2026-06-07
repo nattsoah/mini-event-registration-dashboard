@@ -19,6 +19,16 @@ export interface Registration {
   }>
 }
 
+export interface DashboardSummary {
+  stats: {
+    total: number
+    pending: number
+    confirmed: number
+    cancelled: number
+  }
+  recent_registrations: Registration[]
+}
+
 export interface PaginatedResponse<T> {
   data: T[]
   meta: {

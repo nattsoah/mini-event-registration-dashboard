@@ -34,4 +34,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/registrations/export', [RegistrationController::class, 'exportCsv']);
     Route::get('/registrations/{registration}', [RegistrationController::class, 'show']);
     Route::patch('/registrations/{registration}/status', [RegistrationController::class, 'updateStatus']);
+    Route::get('/summary', [\App\Http\Controllers\Api\SummaryController::class, 'index']);
 });
