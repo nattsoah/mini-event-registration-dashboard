@@ -22,6 +22,9 @@ EventHub is a professional-grade registration management solution featuring a po
 - **Status Management:**
   - **Direct Updates:** Easily change attendee status with instant feedback.
   - **Audit Logging:** Every status change is automatically logged for transparency.
+- **Dashboard Summary:**
+  - **Real-time Analytics:** Interactive data visualization of registration statistics.
+  - **Status Proportions:** Live Pie Chart representing the distribution of attendee statuses.
 
 ### 🌟 Bonus Features
 - **Pagination:** Smooth server-side pagination for handling large datasets.
