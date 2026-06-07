@@ -29,7 +29,6 @@ describe('RegistrationTable', () => {
         sortBy="created_at"
         sortOrder="desc"
         onSort={() => {}}
-        onRefresh={() => {}}
       />
     )
 
@@ -46,7 +45,6 @@ describe('RegistrationTable', () => {
         sortBy="created_at"
         sortOrder="desc"
         onSort={() => {}}
-        onRefresh={() => {}}
       />
     )
 

@@ -36,7 +36,10 @@ describe('RegistrationTimeline', () => {
     expect(screen.getByText('Status: Confirmed')).toBeInTheDocument()
     expect(screen.getByText('Registration Received')).toBeInTheDocument()
     expect(screen.getByText('Status changed to Confirmed')).toBeInTheDocument()
-    expect(screen.getByText('Registration received')).toBeInTheDocument()
+    
+    // Note: The logic in the component uses the oldest log to represent "Registration Received" 
+    // and overrides the message to "Successful submission of registration form."
+    expect(screen.getByText('Successful submission of registration form.')).toBeInTheDocument()
   })
 
   it('renders fallback message if no logs are available', () => {
