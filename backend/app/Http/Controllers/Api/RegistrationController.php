@@ -52,10 +52,16 @@ class RegistrationController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:registrations,email',
+            'email' => [
+                'required',
+                'email',
+                'unique:registrations,email,NULL,id,event_name,' . $request->event_name
+            ],
             'phone' => 'nullable|string|max:20',
             'event_name' => 'required|string|max:255',
             'notes' => 'nullable|string',
+        ], [
+            'email.unique' => 'You have already registered for this event.'
         ]);
 
         $validated['status'] = 'pending';

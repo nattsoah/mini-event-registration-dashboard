@@ -16,7 +16,7 @@ return new class extends Migration
             $blueprint->foreignId('registration_id')->constrained()->cascadeOnDelete();
             $blueprint->string('status');
             $blueprint->string('message')->nullable();
-            $blueprint->timestamp('created_at')->useCurrent();
+            $blueprint->timestamp('created_at')->nullable();
         });
     }
 

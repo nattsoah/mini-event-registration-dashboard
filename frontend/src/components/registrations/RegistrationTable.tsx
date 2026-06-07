@@ -6,6 +6,7 @@ import { Registration } from '@/types/registration'
 import { StatusBadge } from './StatusBadge'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { formatDateTime } from '@/lib/date'
 
 interface RegistrationTableProps {
   registrations: Registration[]
@@ -20,16 +21,6 @@ export function RegistrationTable({ registrations, sortBy, sortOrder, onSort }: 
   const SortIcon = ({ field }: { field: string }) => {
     if (sortBy !== field) return <ArrowUpDown className="w-4 h-4 ml-1 opacity-20" />
     return sortOrder === 'asc' ? <ArrowUp className="w-4 h-4 ml-1 text-primary" /> : <ArrowDown className="w-4 h-4 ml-1 text-primary" />
-  }
-
-  const formatDate = (dateString: string) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(dateString))
   }
 
   return (
@@ -77,7 +68,7 @@ export function RegistrationTable({ registrations, sortBy, sortOrder, onSort }: 
                   <StatusBadge status={reg.status} />
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  {formatDate(reg.created_at)}
+                  {formatDateTime(reg.created_at)}
                 </td>
                 <td className="px-6 py-4 text-right relative">
                   <div className="flex items-center justify-end">
