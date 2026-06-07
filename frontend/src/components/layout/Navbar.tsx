@@ -14,7 +14,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
 
   const getPageTitle = () => {
     if (pathname === '/dashboard') return 'Dashboard Overview'
-    if (pathname.startsWith('/registrations/new')) return 'New Registration'
+    if (pathname.startsWith('/registrations/create')) return 'New Registration'
     if (pathname.startsWith('/registrations/')) return 'Registration Details'
     if (pathname.startsWith('/registrations')) return 'Manage Registrations'
     return 'Admin Panel'

@@ -1,6 +1,7 @@
 import { Registration, RegistrationStatus } from '@/types/registration'
 import { Calendar, CheckCircle2, XCircle, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { formatDateTime } from '@/lib/date'
 
 interface RegistrationTimelineProps {
   registration: Registration
@@ -14,16 +15,6 @@ interface LogEntry {
 }
 
 export function RegistrationTimeline({ registration }: RegistrationTimelineProps) {
-  const formatDate = (dateString: string) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(new Date(dateString))
-  }
-
   const logs = (registration.logs || []) as LogEntry[]
   
   // Logic to build the timeline based on your professional requirements:
@@ -99,7 +90,7 @@ export function RegistrationTimeline({ registration }: RegistrationTimelineProps
                       {item.description}
                     </p>
                     <div className="mt-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                      {formatDate(item.date)}
+                      {formatDateTime(item.date)}
                     </div>
                   </div>
                 </div>

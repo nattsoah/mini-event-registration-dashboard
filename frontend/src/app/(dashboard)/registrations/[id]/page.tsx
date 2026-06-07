@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { ChevronLeft, Edit3, Save, X, Mail, Phone, Calendar, Info, Clock } from 'lucide-react'
 import { useRegistration } from '@/hooks/useRegistration'
@@ -12,7 +12,7 @@ import { RegistrationTimeline } from '@/components/registrations/RegistrationTim
 import LoadingState from '@/components/shared/LoadingState'
 import ErrorState from '@/components/shared/ErrorState'
 import { RegistrationStatus } from '@/types/registration'
-import { useEffect } from 'react'
+import { formatDateTimeLong } from '@/lib/date'
 
 export default function RegistrationDetailPage() {
   const { id } = useParams()
@@ -180,7 +180,7 @@ export default function RegistrationDetailPage() {
                 <div className="flex-1">
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Registered On</p>
                   <p className="text-gray-900 font-semibold">
-                    {new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeStyle: 'short' }).format(new Date(registration.registered_at))}
+                    {formatDateTimeLong(registration.registered_at)}
                   </p>
                 </div>
               </div>
