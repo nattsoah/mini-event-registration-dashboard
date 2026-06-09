@@ -13,9 +13,10 @@ class RegistrationSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Clear existing data to ensure exactly 12
-        RegistrationLog::truncate();
-        Registration::truncate();
+        // Only seed if the table is empty to avoid overwriting user data on restarts
+        if (Registration::count() > 0) {
+            return;
+        }
 
         // 2. Define the 12 permanent mockup records
         $mockups = [
